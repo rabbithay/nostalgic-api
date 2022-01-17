@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+
+#testing
+.env.test
+
+#dev
+.vscode
+.eslint.cjs
+.env
+
+#build
+dist
