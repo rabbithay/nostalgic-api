@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Request, Response } from 'express';
 import { newMovieBodySchema } from '../schemas/newMovieBodySchema';
-import { validateObject } from '../services/utils';
+import { validateObject } from '../services/validateObject';
 import * as movieServices from '../services/movies';
 import { positiveIntegerSchema } from '../schemas/positiveIntegerSchema';
 
