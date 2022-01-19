@@ -10,6 +10,7 @@ import { serverMiddlewareError } from './error/serverMiddlewareErro';
 
 import health from './routes/healthRoute';
 import movie from './routes/movieRoutes';
+import customer from './routes/customerRoutes';
 
 const app = express();
 app.use(cors());
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use(health);
 app.use(movie);
+app.use(customer);
 
 app.use(serverMiddlewareError);
 

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Request, Response } from 'express';
+import { newCustomerBodySchema } from '../schemas/newCustomerBodySchema';
+import { validateObject } from '../services/validateObject';
 import * as customerServices from '../services/customers';
 
 export interface NewCustomer {
@@ -14,7 +16,16 @@ export async function getCustomers(req: Request, res: Response) {
 }
 
 export async function postCustomer(req: Request, res: Response) {
-  //
+  const customerInfo: NewCustomer = req.body;
+
+  const isValidMovie = validateObject({
+    object: customerInfo,
+    schema: newCustomerBodySchema,
+  });
+  if (!isValidMovie) return res.sendStatus(400);
+
+  await customerServices.postCustomer(customerInfo);
+  return res.sendStatus(201);
 }
 
 export async function editCustomer(req: Request, res: Response) {

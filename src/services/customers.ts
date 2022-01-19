@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import { NewCustomer } from '../controllers/customers';
 import { Customer } from '../entities/Customer';
 
 export async function getCustomers() {
@@ -14,8 +15,9 @@ export async function getCustomerByCpf() {
   //
 }
 
-export async function postCustomer() {
-//
+export async function postCustomer(customerInfo: NewCustomer) {
+  const customer = getRepository(Customer).create(customerInfo);
+  await getRepository(Customer).save(customer);
 }
 
 export async function getCustomerById() {
