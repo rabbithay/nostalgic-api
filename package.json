@@ -65,5 +65,9 @@
     "typeorm": "^0.2.41",
     "typeorm-naming-strategies": "^2.0.0",
     "uuid": "^8.3.2"
+  },
+  "private": true, 
+  "scripts": {
+    "postinstall": "husky install"
   }
 }
