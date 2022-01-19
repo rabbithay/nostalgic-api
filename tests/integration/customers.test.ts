@@ -76,7 +76,7 @@ describe('PUT /movies', () => {
     const customer = await createCustomer(mockNewCustomer);
     const { birthdate, id } = customer;
     const updateCustomer = {
-      name: 'Jake The Dog', birthdate, cpf: '14526879452',
+      name: 'Jake The Dog', birthdate, cpf: '145268',
     };
 
     const response = await supertest(app).put(`/customers/${id}`).send(updateCustomer);
@@ -92,8 +92,8 @@ describe('PUT /movies', () => {
     expect(response.status).toBe(400);
   });
 
-  it('should answer with status 404 in case of customers dont exist', async () => {
-    const id = 52;
+  it('should answer with status 404 in case of customer dont exist', async () => {
+    const id = 1555555;
 
     const response = await supertest(app).put(`/customers/${id}`).send(mockNewCustomer);
 

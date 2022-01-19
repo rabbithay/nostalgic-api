@@ -24,10 +24,17 @@ export async function getCustomerById() {
 //
 }
 
-export async function editCustomer() {
-//
+export async function editCustomer(id: number, customerInfo: NewCustomer) {
+  await getRepository(Customer).update(id, customerInfo);
+  const updatedCustomer = await getRepository(Customer).findOne(id);
+  return updatedCustomer;
 }
 
 export async function deleteCustomer() {
 //
+}
+
+export async function findCustomerById(id: number) {
+  const customer = await getRepository(Customer).findOne(id);
+  return customer;
 }
