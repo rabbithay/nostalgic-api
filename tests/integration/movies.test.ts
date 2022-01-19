@@ -134,8 +134,8 @@ describe('DELETE /movies', () => {
     const movie = await createMovie(mockNewMovie);
     const { id } = movie;
 
-    const response = await supertest(app).delete(`/movies${id}`);
+    const response = await supertest(app).delete(`/movies/${id}`);
 
-    expect(response.status).toBe(201);
+    expect(response.status).toBe(200);
   });
 });

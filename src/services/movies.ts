@@ -7,10 +7,6 @@ export async function getMovies() {
   return movieList;
 }
 
-export function validateMovieData() {
-  //
-}
-
 export async function postMovie(movieInfo: NewMovie) {
   const movie = getRepository(Movie).create(movieInfo);
   await getRepository(Movie).save(movie);
@@ -27,6 +23,6 @@ export async function editMovie(id: number, movieInfo: NewMovie) {
   return updatedMovie;
 }
 
-export async function deleteMovie() {
-  //
+export async function deleteMovie(id: number) {
+  await getRepository(Movie).delete(id);
 }
