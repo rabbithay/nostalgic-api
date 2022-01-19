@@ -92,6 +92,14 @@ describe('PUT /movies', () => {
     expect(response.status).toBe(400);
   });
 
+  it('should answer with status 404 in case of movie dont exist', async () => {
+    const id = 52;
+
+    const response = await supertest(app).put(`/movies/${id}`).send(mockNewMovie);
+
+    expect(response.status).toBe(404);
+  });
+
   it('should answer with the updated movie object and status 200 in case of success', async () => {
     const movie = await createMovie(mockNewMovie);
     const { id, parentalRating, newRelease } = movie;
@@ -99,8 +107,9 @@ describe('PUT /movies', () => {
       title: 'Steve Magal contra o sistema', parentalRating, newRelease,
     };
 
-    const response = await supertest(app).put(`/movies${id}`).send(updateMovie);
+    const response = await supertest(app).put(`/movies/${id}`).send(updateMovie);
 
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         id,
@@ -109,7 +118,6 @@ describe('PUT /movies', () => {
         newRelease,
       }),
     );
-    expect(response.status).toBe(200);
   });
 });
 

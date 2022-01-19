@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { newMovieBodySchema } from '../schemas/newMovieBodySchema';
 import { validateObject } from '../services/utils';
 import * as movieServices from '../services/movies';
+import { positiveIntegerSchema } from '../schemas/positiveIntegerSchema';
 
 export interface NewMovie {
   title: string;
@@ -29,7 +30,25 @@ export async function postMovie(req: Request, res: Response) {
 }
 
 export async function editMovie(req: Request, res: Response) {
-  //
+  const { id } = req.params;
+  const isValidId = validateObject({
+    object: { number: id },
+    schema: positiveIntegerSchema,
+  });
+  if (!isValidId) return res.sendStatus(400);
+
+  const movieInfo: NewMovie = req.body;
+  const isValidMovie = validateObject({
+    object: movieInfo,
+    schema: newMovieBodySchema,
+  });
+  if (!isValidMovie) return res.sendStatus(400);
+
+  const movieToBeEdited = await movieServices.findMovieById(Number(id));
+  if (!movieToBeEdited) return res.sendStatus(404);
+
+  const updatedMovie = await movieServices.editMovie(Number(id), movieInfo);
+  return res.status(200).send(updatedMovie);
 }
 
 export async function deleteMovie(req: Request, res: Response) {
