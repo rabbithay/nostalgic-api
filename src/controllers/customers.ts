@@ -52,5 +52,13 @@ export async function editCustomer(req: Request, res: Response) {
 }
 
 export async function deleteCustomer(req: Request, res: Response) {
-  //
+  const { id } = req.params;
+  const isValidId = validateObject({
+    object: { number: id },
+    schema: positiveIntegerSchema,
+  });
+  if (!isValidId) return res.sendStatus(400);
+
+  await customerServices.deleteCustomer(Number(id));
+  return res.sendStatus(200);
 }

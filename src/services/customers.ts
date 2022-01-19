@@ -30,8 +30,8 @@ export async function editCustomer(id: number, customerInfo: NewCustomer) {
   return updatedCustomer;
 }
 
-export async function deleteCustomer() {
-//
+export async function deleteCustomer(id: number) {
+  await getRepository(Customer).delete(id);
 }
 
 export async function findCustomerById(id: number) {
