@@ -8,6 +8,11 @@ module.exports = {
   url: process.env.DATABASE_URL,
   migrationsTableName: 'migrations',
   migrations: ['dist/migrations/*.js'],
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
   cli: {
     migrationsDir: 'src/migrations',
     entitiesDir: 'dist/entities/*.js',
