@@ -7,7 +7,7 @@
 #dev
 .vscode
 .eslint.cjs
-.env
+.env.development
 
 #build
 dist

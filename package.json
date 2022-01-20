@@ -16,7 +16,7 @@
     "test:watch": "yarn run jest --passWithNoTests --noStackTrace --runInBand --watch",
     "migration:run": "yarn run typeorm migration:run",
     "migration:generate": "NODE_ENV=development yarn run typeorm migration:generate -n ",
-    "migration:create": "NODE_ENV=development yarn run typeorm migration:create",
+    "migration:create": "NODE_ENV=development yarn run typeorm migration:create -n ",
     "postinstall": "husky install"
   },
   "repository": {
