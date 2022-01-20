@@ -2,7 +2,7 @@ import { getConnectionManager, getConnection, createConnection } from 'typeorm';
 
 export default async function connect() {
   try {
-    const connection = getConnection('default');
+    const connection = await getConnection('default');
     return connection;
   } catch (err) {
     const connection = await createConnection();
