@@ -105,10 +105,10 @@ describe('PUT /rentals', () => {
   it('should answer with status 400 in case of invalid body', async () => {
     const rental = await mockNewRental();
     const {
-      id, rentDate, customer,
+      id, rentDate, customerId,
     } = rental;
     const updateRental = {
-      rentDate, returnDate: '2022-01-10', movieId: 'invalid_id', customerId: customer.id,
+      rentDate, returnDate: '2022-01-10', movieId: 'invalid_id', customerId,
     };
 
     const response = await supertest(app).put(`/rentals/${id}`).send(updateRental);
@@ -119,8 +119,14 @@ describe('PUT /rentals', () => {
   it('should answer with status 400 in case of invalid id', async () => {
     const id = 'id_invalido';
     const rental = await mockNewRental();
+    const {
+      rentDate, customerId, movieId,
+    } = rental;
+    const updateRental = {
+      rentDate, returnDate: '2022-01-10', movieId, customerId,
+    };
 
-    const response = await supertest(app).put(`/rentals/${id}`).send(rental);
+    const response = await supertest(app).put(`/rentals/${id}`).send(updateRental);
 
     expect(response.status).toBe(400);
   });
@@ -128,8 +134,13 @@ describe('PUT /rentals', () => {
   it('should answer with status 404 in case of rental dont exist', async () => {
     const id = 52;
     const rental = await mockNewRental();
-
-    const response = await supertest(app).put(`/rentals/${id}`).send(rental);
+    const {
+      rentDate, customerId, movieId,
+    } = rental;
+    const updateRental = {
+      rentDate, returnDate: '2022-01-10', movieId, customerId,
+    };
+    const response = await supertest(app).put(`/rentals/${id}`).send(updateRental);
 
     expect(response.status).toBe(404);
   });
@@ -137,10 +148,10 @@ describe('PUT /rentals', () => {
   it('should answer with the updated rental objectand status 200 in case of success', async () => {
     const rental = await mockNewRental();
     const {
-      id, rentDate, movie, customer,
+      id, rentDate, movieId, customerId,
     } = rental;
     const updateRental = {
-      rentDate, returnDate: '2022-01-10', movieId: movie.id, customerId: customer.id,
+      rentDate, returnDate: '2022-01-10', movieId, customerId,
     };
 
     const response = await supertest(app).put(`/rentals/${id}`).send(updateRental);
@@ -148,7 +159,7 @@ describe('PUT /rentals', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        id, rentDate, returnDate: updateRental.returnDate, movie, customer,
+        id, rentDate, returnDate: updateRental.returnDate, movieId, customerId,
       }),
     );
   });
