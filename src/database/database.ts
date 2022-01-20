@@ -1,15 +1,20 @@
-import { getConnectionManager } from 'typeorm';
-
-const rootDir = process.env.NODE_ENV === 'production' ? 'dist' : 'src';
+import { getConnectionManager, getConnection, createConnection } from 'typeorm';
 
 export default async function connect() {
-  const connectionManager = await getConnectionManager();
-  const connection = connectionManager.create({
-    name: 'default',
-    type: 'postgres',
-    url: process.env.DATABASE_URL,
-    entities: [`${rootDir}/entities/*.{ts,js}`],
-  });
-  await connection.connect();
-  return connection;
+  try {
+    const connection = getConnection('default');
+    return connection;
+  } catch (err) {
+    const connection = await createConnection();
+    return connection;
+  }
 }
+
+export const close = async (): Promise<void> => {
+  const connectionManager = getConnectionManager();
+  const connectionName = 'default';
+
+  if (connectionManager.has(connectionName)) {
+    await connectionManager.get(connectionName).close();
+  }
+};

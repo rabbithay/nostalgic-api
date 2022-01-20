@@ -6,6 +6,8 @@ import { getConnection } from 'typeorm';
 import app, { init } from '../../src/app';
 import { clearDatabase } from '../factories/clearDatabase';
 import { createRental } from '../factories/createRental';
+import { createCustomer } from '../factories/createCustomer';
+import { createMovie } from '../factories/createMovie';
 
 beforeAll(async () => {
   await init();
@@ -21,36 +23,53 @@ afterAll(async () => {
 
 export interface RentalBody {
   rentDate: string,
-  returnDate: string,
+  returnDate?: string,
   movieId: number,
   customerId: number,
 }
 
-const mockNewRental: RentalBody = {
-  rentDate: '2022-01-05',
-  returnDate: '',
-  movieId: 1,
-  customerId: 3,
+const mockNewCustomer = {
+  name: 'Finn The Human',
+  cpf: '91558203010',
+  birthdate: '2001-12-18',
 };
+
+const mockNewMovie = {
+  title: 'Piratas do caribe',
+  parentalRating: '10',
+  newRelease: false,
+};
+
+async function mockNewRental(body: Partial<RentalBody> = {}) {
+  const movie = await createMovie(mockNewMovie);
+  const customer = await createCustomer(mockNewCustomer);
+  const mockNewRentalBody: RentalBody = {
+    rentDate: body.rentDate || '2022-01-05',
+    movieId: body.movieId || movie.id,
+    customerId: body.customerId || customer.id,
+    returnDate: body.returnDate || null,
+  };
+  const newRental = await createRental(mockNewRentalBody);
+  return newRental;
+}
 
 describe('GET /rentals', () => {
   it('should answer with a array of rentals and status 200 in case of success', async () => {
-    const rental = await createRental(mockNewRental);
+    const rental = await mockNewRental();
 
     const response = await supertest(app).get('/rentals');
 
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: rental.id,
           rentDate: rental.rentDate,
-          returnDate: rental.returnDate,
-          movie: rental.movie,
-          customer: rental.customer,
+          movieId: rental.movieId,
+          customerId: rental.customerId,
         }),
       ]),
     );
-    expect(response.status).toBe(200);
   });
 });
 
@@ -58,7 +77,7 @@ describe('POST /rentals', () => {
   it('should answer with status 400 in case of invalid body', async () => {
     const {
       rentDate, returnDate, customerId,
-    } = mockNewRental;
+    } = await mockNewRental();
     const rental = {
       rentDate, returnDate, movieId: 'invalid_id', customerId,
     };
@@ -69,7 +88,7 @@ describe('POST /rentals', () => {
   });
 
   it('should answer with status 201 in case of success', async () => {
-    const rental = mockNewRental;
+    const rental = await mockNewRental();
 
     const response = await supertest(app).post('/rentals').send(rental);
 
@@ -79,7 +98,7 @@ describe('POST /rentals', () => {
 
 describe('PUT /rentals', () => {
   it('should answer with status 400 in case of invalid body', async () => {
-    const rental = await createRental(mockNewRental);
+    const rental = await mockNewRental();
     const {
       id, rentDate, customer,
     } = rental;
@@ -94,22 +113,24 @@ describe('PUT /rentals', () => {
 
   it('should answer with status 400 in case of invalid id', async () => {
     const id = 'id_invalido';
+    const rental = await mockNewRental();
 
-    const response = await supertest(app).put(`/rentals/${id}`).send(mockNewRental);
+    const response = await supertest(app).put(`/rentals/${id}`).send(rental);
 
     expect(response.status).toBe(400);
   });
 
   it('should answer with status 404 in case of rental dont exist', async () => {
     const id = 52;
+    const rental = await mockNewRental();
 
-    const response = await supertest(app).put(`/rentals/${id}`).send(mockNewRental);
+    const response = await supertest(app).put(`/rentals/${id}`).send(rental);
 
     expect(response.status).toBe(404);
   });
 
-  it('should answer with the updated rental object and status 200 in case of success', async () => {
-    const rental = await createRental(mockNewRental);
+  it('should answer with the updated rental objectand status 200 in case of success', async () => {
+    const rental = await mockNewRental();
     const {
       id, rentDate, movie, customer,
     } = rental;
@@ -138,7 +159,7 @@ describe('DELETE /rentals', () => {
   });
 
   it('should answer with status 200 in case of success', async () => {
-    const rental = await createRental(mockNewRental);
+    const rental = await mockNewRental();
     const { id } = rental;
 
     const response = await supertest(app).delete(`/rentals/${id}`);

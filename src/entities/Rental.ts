@@ -12,8 +12,14 @@ export class Rental {
   @Column({ type: 'date' })
     rentDate: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
     returnDate!: string;
+
+  @Column()
+    movieId: number;
+
+  @Column()
+    customerId!:number;
 
   @ManyToOne(() => Movie, (movie: Movie) => movie.id)
     movie: Movie;
