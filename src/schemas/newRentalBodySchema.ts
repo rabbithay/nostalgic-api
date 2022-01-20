@@ -1,7 +1,8 @@
 import Joi from 'joi';
 
 export const newRentalBodySchema = Joi.object({
-  title: Joi.string().required(),
-  parentalRating: Joi.string().valid('livre', '10', '12', '14', '16', '18').required(),
-  newRelease: Joi.boolean().required(),
+  rentDate: Joi.date().required(),
+  returnDate: Joi.date().allow(null),
+  movieId: Joi.number().integer().positive(),
+  customerId: Joi.number().integer().positive(),
 });

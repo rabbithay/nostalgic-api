@@ -43,7 +43,7 @@ const mockNewMovie = {
 async function mockNewRental(body: Partial<RentalBody> = {}) {
   const movie = await createMovie(mockNewMovie);
   const customer = await createCustomer(mockNewCustomer);
-  const mockNewRentalBody: RentalBody = {
+  const mockNewRentalBody = {
     rentDate: body.rentDate || '2022-01-05',
     movieId: body.movieId || movie.id,
     customerId: body.customerId || customer.id,
@@ -88,7 +88,12 @@ describe('POST /rentals', () => {
   });
 
   it('should answer with status 201 in case of success', async () => {
-    const rental = await mockNewRental();
+    const {
+      rentDate, customerId, movieId,
+    } = await mockNewRental();
+    const rental = {
+      rentDate, movieId, customerId,
+    };
 
     const response = await supertest(app).post('/rentals').send(rental);
 
