@@ -8,15 +8,16 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./dist/server.js",
-    "dev": "NODE_ENV=dev nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
+    "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
     "build": "rm -rf ./dist && tsc -p tsconfig.json",
     "typeorm": "ts-node ./node_modules/typeorm/cli",
     "test": "NODE_ENV=test yarn run jest --passWithNoTests --noStackTrace --runInBand --silent",
-    "test:verbose": "NODE_ENV=test yarn run jest --passWithNoTests --noStackTrace --runInBand --verbose",
-    "test:watch": "NODE_ENV=test yarn run jest --passWithNoTests --noStackTrace --runInBand --watch",
+    "test:verbose": "yarn run jest --passWithNoTests --noStackTrace --runInBand --verbose",
+    "test:watch": "yarn run jest --passWithNoTests --noStackTrace --runInBand --watch",
     "migration:run": "yarn run typeorm migration:run",
     "migration:generate": "NODE_ENV=development yarn run typeorm migration:generate -n ",
-    "migration:create": "NODE_ENV=development yarn run typeorm migration:create"
+    "migration:create": "NODE_ENV=development yarn run typeorm migration:create",
+    "postinstall": "husky install"
   },
   "repository": {
     "type": "git",
@@ -66,8 +67,6 @@
     "typeorm-naming-strategies": "^2.0.0",
     "uuid": "^8.3.2"
   },
-  "private": true, 
-  "scripts": {
-    "postinstall": "husky install"
-  }
+  "private": true
+
 }
